@@ -1,23 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Infrastructure.Models;
+namespace Infrastructure;
 
 public partial class BlogPost
 {
     public int BlogPostId { get; set; }
 
-    public string Title { get; set; } = null!;
+    public string BlogPostTitle { get; set; } = null!;
 
-    public string? Description { get; set; }
+    public string? BlogPostDescription { get; set; }
 
     public int? ImageId { get; set; }
 
     public int? AuthorId { get; set; }
 
-    public int? Period { get; set; }
+    public int? BlogPostPeriod { get; set; }
 
-    public string? Status { get; set; }
+    public string? BlogPostStatus { get; set; }
 
     public DateOnly? PublishedDay { get; set; }
 

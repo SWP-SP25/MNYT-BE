@@ -1,30 +1,29 @@
-﻿using Domain;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace Infrastructure.Models;
+namespace Infrastructure;
 
-public partial class Account : BaseEntity
+public partial class Account
 {
     public int AccountId { get; set; }
 
-    public string UserName { get; set; } = null!;
+    public string AccountUserName { get; set; } = null!;
 
-    public string FullName { get; set; } = null!;
+    public string AccountFullName { get; set; } = null!;
 
-    public string Email { get; set; } = null!;
+    public string AccountEmail { get; set; } = null!;
 
-    public string Password { get; set; } = null!;
+    public string AccountPassword { get; set; } = null!;
 
-    public string? PhoneNumber { get; set; }
+    public string? AccountPhoneNumber { get; set; }
 
-    public string? Role { get; set; }
+    public string? AccountRole { get; set; }
 
-    public string? Status { get; set; }
+    public string? AccountStatus { get; set; }
 
-    public bool? IsExternal { get; set; }
+    public bool? AccountIsExternal { get; set; }
 
-    public string? ExternalProvider { get; set; }
+    public string? AccountExternalProvider { get; set; }
 
     public virtual ICollection<AccountMembership> AccountMemberships { get; set; } = new List<AccountMembership>();
 
@@ -35,8 +34,6 @@ public partial class Account : BaseEntity
     public virtual ICollection<BlogPost> BlogPosts { get; set; } = new List<BlogPost>();
 
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
-
-    public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
     public virtual ICollection<Pregnancy> Pregnancies { get; set; } = new List<Pregnancy>();
 }

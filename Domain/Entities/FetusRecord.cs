@@ -1,29 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Infrastructure.Models;
+namespace Infrastructure;
 
 public partial class FetusRecord
 {
     public int FetusRecordId { get; set; }
 
-    public int? PregnancyId { get; set; }
+    public int FetusId { get; set; }
 
-    public int? FetusId { get; set; }
+    public int? FetusRecordPeriod { get; set; }
 
-    public int? Period { get; set; }
+    public int? FetusRecordInputPeriod { get; set; }
 
-    public int? InputPeriod { get; set; }
+    public decimal? FetusRecordWeight { get; set; }
 
-    public decimal? Weight { get; set; }
+    public decimal? FetusRecordBpd { get; set; }
 
-    public decimal? Bpd { get; set; }
+    public decimal? FetusRecordLength { get; set; }
 
-    public decimal? Length { get; set; }
+    public decimal? FetusRecordHc { get; set; }
 
-    public decimal? Hc { get; set; }
+    public DateOnly? FetusRecordDate { get; set; }
 
-    public DateOnly? Date { get; set; }
-
-    public virtual Pregnancy? Pregnancy { get; set; }
+    public virtual Fetus Fetus { get; set; } = null!;
 }

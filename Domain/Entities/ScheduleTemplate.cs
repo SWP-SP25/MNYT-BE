@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Infrastructure.Models;
+namespace Infrastructure;
 
 public partial class ScheduleTemplate
 {
     public int ScheduleTemplateId { get; set; }
 
-    public int Period { get; set; }
+    public int ScheduleTemplatePeriod { get; set; }
 
-    public string? Type { get; set; }
+    public string? ScheduleTemplateType { get; set; }
 
-    public string? Title { get; set; }
+    public string? ScheduleTemplateTitle { get; set; }
 
-    public string? Description { get; set; }
+    public string? ScheduleTemplateDescription { get; set; }
 }

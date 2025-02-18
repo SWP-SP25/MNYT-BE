@@ -1,32 +1,58 @@
-﻿using Application;
-using Application.IRepos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Domain.Interfaces;
+using Infrastructure.Data;
+using Infrastructure.Repos;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Infrastructure
 {
     public class UnitOfWork : IUnitOfWork
     {
-        public readonly AppDbContext _context;
+        private readonly AppDbContext _context;
 
-        public readonly ISubjectRepo _subjectRepo;
+        private readonly Dictionary<Type, object> _repositories;
 
-
-
-        public UnitOfWork(AppDbContext context, ISubjectRepo subjectRepo)
+        public UnitOfWork(AppDbContext context)
         {
             _context = context;
-            _subjectRepo = subjectRepo;
+            _repositories = new Dictionary<Type, object>();
         }
 
-        public ISubjectRepo SubjectRepo => _subjectRepo;
+        public IGenericRepository<T> GetRepository<T>() where T : class
+        {
+            var type = typeof(T);
 
-        public async Task<int> SaveChangesAsync()
+            if (!_repositories.ContainsKey(type))
+            {
+                var repositoryInstance = new GenericRepository<T>(_context);
+                _repositories.Add(type, repositoryInstance);
+            }
+
+            return (IGenericRepository<T>)_repositories[type];
+        }
+
+        public int Complete()
+        {
+            return _context.SaveChanges();
+        }
+
+        public async Task<int> CompleteAsync()
         {
             return await _context.SaveChangesAsync();
+        }
+
+        public IDbContextTransaction BeginTransaction()
+        {
+            return _context.Database.BeginTransaction();
+        }
+
+        public async Task<IDbContextTransaction> BeginTransactionAsync()
+        {
+            return await _context.Database.BeginTransactionAsync();
+        }
+
+        public void Dispose()
+        {
+            _context.Dispose();
         }
     }
 }

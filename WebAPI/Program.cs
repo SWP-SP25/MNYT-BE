@@ -1,5 +1,8 @@
 
+using Application;
 using Infrastructure;
+using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 namespace WebAPI
 {
     public class Program
@@ -11,8 +14,12 @@ namespace WebAPI
             // Add services to the container.
             builder.Configuration.AddEnvironmentVariables();
 
+            // Add configuration for user secrets
+            builder.Configuration.AddUserSecrets<Program>();
+
             builder.Services.AddControllers();
 
+            builder.Services.AddApplicationServices();
             builder.Services.AddInfrastructureServices(builder.Configuration);
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
