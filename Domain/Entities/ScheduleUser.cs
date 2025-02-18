@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Infrastructure.Models;
+namespace Infrastructure;
 
 public partial class ScheduleUser
 {
@@ -9,13 +9,15 @@ public partial class ScheduleUser
 
     public int? PregnancyId { get; set; }
 
-    public string? Title { get; set; }
+    public string? ScheduleUserTitle { get; set; }
 
-    public string? Status { get; set; }
+    public string? ScheduleUserStatus { get; set; }
 
-    public string? Type { get; set; }
+    public string? ScheduleUserType { get; set; }
 
-    public DateOnly? Date { get; set; }
+    public DateOnly? ScheduleUserDate { get; set; }
 
-    public string? Note { get; set; }
+    public string? ScheduleUserNote { get; set; }
+
+    public virtual Pregnancy? Pregnancy { get; set; }
 }

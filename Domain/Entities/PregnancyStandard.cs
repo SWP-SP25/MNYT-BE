@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Infrastructure.Models;
+namespace Infrastructure;
 
 public partial class PregnancyStandard
 {
     public int PregnancyStandardId { get; set; }
 
-    public string? Type { get; set; }
+    public string? PregnancyType { get; set; }
 
-    public int? Period { get; set; }
+    public string? PregnancyStandardType { get; set; }
 
-    public decimal? Minimum { get; set; }
+    public int? PregnancyStandardPeriod { get; set; }
 
-    public decimal? Maximum { get; set; }
+    public decimal? PregnancyStandardMinimum { get; set; }
 
-    public string? Unit { get; set; }
+    public decimal? PregnancyStandardMaximum { get; set; }
+
+    public string? PregnancyStandardUnit { get; set; }
 }

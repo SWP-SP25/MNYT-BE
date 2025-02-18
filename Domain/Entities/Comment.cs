@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Infrastructure.Models;
+namespace Infrastructure;
 
 public partial class Comment
 {
@@ -13,9 +13,9 @@ public partial class Comment
 
     public int? ReplyId { get; set; }
 
-    public string? Status { get; set; }
+    public string? CommentStatus { get; set; }
 
-    public string? Content { get; set; }
+    public string? CommentContent { get; set; }
 
     public virtual Account? Account { get; set; }
 

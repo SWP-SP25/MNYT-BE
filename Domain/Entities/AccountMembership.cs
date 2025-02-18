@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Infrastructure.Models;
+namespace Infrastructure;
 
 public partial class AccountMembership
 {
@@ -11,19 +11,19 @@ public partial class AccountMembership
 
     public int? MembershipPlanId { get; set; }
 
-    public DateOnly? StartDate { get; set; }
+    public DateOnly? AccountMembershipStartDate { get; set; }
 
-    public DateOnly? EndDate { get; set; }
+    public DateOnly? AccountMembershipEndDate { get; set; }
 
-    public decimal? PaymentAmount { get; set; }
+    public decimal? AccountMembershipPaymentAmount { get; set; }
 
-    public string? PaymentStatus { get; set; }
+    public string? AccountMembershipPaymentStatus { get; set; }
 
-    public string? PaymentMethod { get; set; }
-
-    public string? TransactionCode { get; set; }
+    public int? PaymentMethodId { get; set; }
 
     public virtual Account? Account { get; set; }
 
     public virtual MembershipPlan? MembershipPlan { get; set; }
+
+    public virtual PaymentMethod? PaymentMethod { get; set; }
 }

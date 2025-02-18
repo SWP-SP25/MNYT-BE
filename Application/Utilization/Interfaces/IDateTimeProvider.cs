@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Entities
+namespace Application.Utilization.Interfaces
 {
-    public class Subject : BaseEntity
+    public interface IDateTimeProvider
     {
+        DateTime UtcNow { get; }
     }
 }
