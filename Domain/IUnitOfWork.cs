@@ -1,6 +1,7 @@
-﻿using Application.IRepos;
+﻿using Domain.IRepos;
+using Microsoft.EntityFrameworkCore.Storage;
 
-namespace Application
+namespace Domain
 {
     public interface IUnitOfWork
     {
@@ -35,5 +36,7 @@ namespace Application
         IScheduleUserRepo ScheduleUserRepo { get; }
 
         public Task<int> SaveChangesAsync();
+        IDbContextTransaction BeginTransaction();
+        Task<IDbContextTransaction> BeginTransactionAsync();
     }
 }

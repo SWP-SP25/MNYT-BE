@@ -1,5 +1,7 @@
-﻿using Application.IRepos;
-using Domain.Entities;
+﻿using Domain.Entities;
+using Domain.IRepos;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Infrastructure.Repos
 {
@@ -9,6 +11,26 @@ namespace Infrastructure.Repos
         public AccountRepo(AppDbContext dbContext) : base(dbContext)
         {
             _appDbContext = dbContext;
+        }
+
+        public async Task<Account> GetAsync(Expression<Func<Account, bool>> predicate, string includeProperties = "")
+        {
+            IQueryable<Account> query = _dbSet;
+
+            if (!string.IsNullOrWhiteSpace(includeProperties))
+            {
+                foreach (var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProperty.Trim());
+                }
+            }
+
+            return await query.FirstOrDefaultAsync(predicate);
+        }
+
+        public async Task<bool> AnyAsync(Expression<Func<Account, bool>> predicate)
+        {
+            return await _dbSet.AnyAsync(predicate);
         }
     }
 }

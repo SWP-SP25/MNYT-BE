@@ -1,5 +1,6 @@
-﻿using Application.IRepos;
+﻿
 using Domain.Entities;
+using Domain.IRepos;
 
 namespace Infrastructure.Repos
 {

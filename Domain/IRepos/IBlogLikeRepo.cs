@@ -1,6 +1,6 @@
 ﻿using Domain.Entities;
 
-namespace Application.IRepos
+namespace Domain.IRepos
 {
     public interface IBlogLikeRepo : IGenericRepo<BlogLike>
     {

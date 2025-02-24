@@ -1,5 +1,6 @@
-﻿using Application.IRepos;
+﻿
 using Domain;
+using Domain.IRepos;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
