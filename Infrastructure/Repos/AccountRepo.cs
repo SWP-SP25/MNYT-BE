@@ -32,5 +32,11 @@ namespace Infrastructure.Repos
         {
             return await _dbSet.AnyAsync(predicate);
         }
+
+        public async Task<Account> GetAsync(string username, string password)
+        {
+            var result = await _appDbContext.Accounts.FirstOrDefaultAsync(x => x.Email == username && x.Password == password);
+            return result;
+        }
     }
 }

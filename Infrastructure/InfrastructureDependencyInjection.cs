@@ -1,4 +1,8 @@
-﻿using Domain;
+﻿using Application.Authentication.Implementation;
+using Application.Authentication.Interfaces;
+using Application.Utilization.Implementation;
+using Application.Utilization.Interfaces;
+using Domain;
 using Domain.IRepos;
 using Infrastructure.Repos;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +18,7 @@ namespace Infrastructure
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+            #region repository config
             services.AddScoped<IAccountRepo, AccountRepo>();
             services.AddScoped<IAccountMembershipRepo, AccountMembershipRepo>();
             services.AddScoped<IMembershipPlanRepo, MembershipPlanRepo>();
@@ -29,6 +34,14 @@ namespace Infrastructure
             services.AddScoped<IPregnancyStandardRepo, PregnancyStandardRepo>();
             services.AddScoped<IScheduleTemplateRepo, ScheduleTemplateRepo>();
             services.AddScoped<IScheduleUserRepo, ScheduleUserRepo>();
+            #endregion
+
+
+            #region service config
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IJwtTokenService, JwtTokenService>();
+            services.AddScoped<IDateTimeProvider, DateTimeProvider>();
+            #endregion
 
             services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(config.GetConnectionString("MNYT_DB")));
 

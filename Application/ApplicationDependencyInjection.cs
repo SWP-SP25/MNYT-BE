@@ -10,9 +10,6 @@ namespace Application
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-            services.AddScoped<IAuthenticationService, AuthenticationService>();
-            services.AddScoped<IJwtTokenService, JwtTokenService>();
-            services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 
             return services;
 

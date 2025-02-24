@@ -3,7 +3,6 @@ using Application.ViewModels.Authentication;
 using AutoMapper;
 using Domain;
 using Domain.Entities;
-using Infrastructure;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -14,7 +13,6 @@ namespace Application.Authentication.Implementation
     public class AuthenticationService : IAuthenticationService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly DatabaseSettings _dbSettings;
         private readonly IJwtTokenService _jwtTokenService;
         private readonly ILogger<AuthenticationService> _logger;
         private readonly IMapper _mapper;
@@ -23,14 +21,12 @@ namespace Application.Authentication.Implementation
             IUnitOfWork unitOfWork,
             IJwtTokenService jwtTokenService,
             ILogger<AuthenticationService> logger,
-            IMapper mapper,
-            IOptions<DatabaseSettings> dbSettings)
+            IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _jwtTokenService = jwtTokenService;
             _logger = logger;
             _mapper = mapper;
-            _dbSettings = dbSettings.Value;
         }
 
         public async Task<LoginResponseDTO> RegisterAsync(AccountRegistrationDTO registrationDto)
@@ -44,11 +40,13 @@ namespace Application.Authentication.Implementation
             }
 
             // Check if account already exists (by Email or Username)
-            var accountExists = await _unitOfWork.AccountRepo.AnyAsync(u =>
-                EF.Functions.Collate(u.Email, _dbSettings.Collation) == registrationDto.Email ||
-                EF.Functions.Collate(u.UserName, _dbSettings.Collation) == registrationDto.UserName);
+            //var accountExists = await _unitOfWork.AccountRepo.AnyAsync(u =>
+            //    EF.Functions.Collate(u.Email, _dbSettings.Collation) == registrationDto.Email ||
+            //    EF.Functions.Collate(u.UserName, _dbSettings.Collation) == registrationDto.UserName);
 
-            if (accountExists)
+            var accountExists = await _unitOfWork.AccountRepo.GetAsync(
+                string.IsNullOrWhiteSpace(registrationDto.Email) ? registrationDto.UserName : registrationDto.Email, registrationDto.Password);
+            if (accountExists != null)
             {
                 _logger.LogWarning("User already exists with the provided email or username.");
                 return new LoginResponseDTO { Success = false, Message = "User already exists." };
@@ -120,11 +118,10 @@ namespace Application.Authentication.Implementation
 
             try
             {
-                var account = await _unitOfWork.AccountRepo.GetAsync(u =>
-                    EF.Functions.Collate(u.Email, _dbSettings.Collation) == emailOrUsername ||
-                    EF.Functions.Collate(u.UserName, _dbSettings.Collation) == emailOrUsername);
+                var accountList = await _unitOfWork.AccountRepo.GetAllAsync();
+                var account = accountList.FirstOrDefault(x => x.Email == emailOrUsername || x.UserName == emailOrUsername);
 
-                if (account == null || !string.Equals(account.Status, "Active", StringComparison.OrdinalIgnoreCase))
+                if (account == null || !account.Status.Equals("Active", StringComparison.OrdinalIgnoreCase))
                 {
                     _logger.LogWarning("Invalid credentials or account is banned.");
                     return new LoginResponseDTO { Success = false, Message = "Invalid credentials or account is banned." };

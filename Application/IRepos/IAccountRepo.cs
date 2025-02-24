@@ -12,5 +12,7 @@ namespace Domain.IRepos
     {
         Task<Account> GetAsync(Expression<Func<Account, bool>> predicate, string includeProperties = "");
         Task<bool> AnyAsync(Expression<Func<Account, bool>> predicate);
+
+        Task<Account> GetAsync(string username, string password);
     }
 }
