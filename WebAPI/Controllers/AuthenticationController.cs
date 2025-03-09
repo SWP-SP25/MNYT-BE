@@ -3,6 +3,7 @@ using Application.ViewModels;
 using Application.ViewModels.Authentication;
 using Application.IServices.Authentication;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebAPI.Controllers
 {
