@@ -1,4 +1,4 @@
-﻿using Application.IServices;
+﻿using Application.Services.IServices;
 using Domain;
 using Domain.Entities;
 using Microsoft.Extensions.Logging;

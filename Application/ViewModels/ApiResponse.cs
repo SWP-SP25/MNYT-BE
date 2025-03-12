@@ -25,7 +25,6 @@ namespace Application.ViewModels
             Errors = errors;
         }
 
-        // Convenience constructors
         public static ApiResponse<T> SuccessResponse(T data, string message = "Operation successful.")
         {
             return new ApiResponse<T>
