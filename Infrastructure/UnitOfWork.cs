@@ -24,7 +24,6 @@ namespace Infrastructure
         public readonly IScheduleTemplateRepo _scheduleTemplateRepo;
         public readonly IScheduleUserRepo _scheduleUserRepo;
 
-
         public IAccountRepo AccountRepo => _accountRepo;
 
         public IAccountMembershipRepo AccountMembershipRepo => _accountMembershipRepo;
