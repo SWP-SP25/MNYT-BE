@@ -73,7 +73,7 @@ namespace Application.Services
             vnpay.AddRequestData("vnp_TmnCode", _configuration["Vnpay:vnp_TmnCode"]);
             vnpay.AddRequestData("vnp_Amount", ((long)(amount * 100)).ToString());
             vnpay.AddRequestData("vnp_CurrCode", _configuration["Vnpay:vnp_CurrCode"]);
-            vnpay.AddRequestData("vnp_TxnRef", orderId);
+            vnpay.AddRequestData("vnp_TxnRef", tick);
             vnpay.AddRequestData("vnp_IpAddr", PaymentProviders.VnPay.Utils.GetIpAddress(_httpContextAccessor));
             vnpay.AddRequestData("vnp_OrderInfo", orderDesc);
             vnpay.AddRequestData("vnp_OrderType", "other");
