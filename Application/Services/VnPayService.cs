@@ -63,7 +63,9 @@ namespace Application.Services
 
             var timeZoneById = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             var timeNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZoneById);
-            var orderId = newMembership.Id.ToString();
+
+            Console.WriteLine("timeZoneById:" + timeZoneById + "\n;" + "timeNow:" + timeNow);
+            var tick = DateTime.Now.Ticks.ToString();
 
             var vnpay = new VnPayLibrary();
             vnpay.AddRequestData("vnp_Version", VnPayLibrary.VERSION);
@@ -82,7 +84,6 @@ namespace Application.Services
 
             string paymentUrl = vnpay.CreateRequestUrl(_configuration["Vnpay:vnp_BaseUrl"], _configuration["Vnpay:vnp_HashSecret"]);
             _logger.LogInformation("Payment URL: {0}", paymentUrl);
-
             return paymentUrl;
         }
 
