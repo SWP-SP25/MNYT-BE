@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.Numerics;
 
 namespace Application.Services
 {
@@ -58,11 +59,11 @@ namespace Application.Services
             newMembership.PaymentMethodId = (int)PaymentMethodEnum.VNPAY;
 
             decimal amount = newMembership.Amount ?? 0;
-            string orderDesc = $"Payment for membership plan ... (#{newMembership.Id})";
+            string orderDesc = $"Payment for membership plan {newMembership.Id}";
 
             var timeZoneById = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             var timeNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZoneById);
-            var tick = DateTime.Now.Ticks.ToString();
+            var orderId = newMembership.Id.ToString();
 
             var vnpay = new VnPayLibrary();
             vnpay.AddRequestData("vnp_Version", VnPayLibrary.VERSION);
@@ -70,14 +71,14 @@ namespace Application.Services
             vnpay.AddRequestData("vnp_TmnCode", _configuration["Vnpay:vnp_TmnCode"]);
             vnpay.AddRequestData("vnp_Amount", ((long)(amount * 100)).ToString());
             vnpay.AddRequestData("vnp_CurrCode", _configuration["Vnpay:vnp_CurrCode"]);
-            vnpay.AddRequestData("vnp_TxnRef", tick);
+            vnpay.AddRequestData("vnp_TxnRef", orderId);
             vnpay.AddRequestData("vnp_IpAddr", PaymentProviders.VnPay.Utils.GetIpAddress(_httpContextAccessor));
             vnpay.AddRequestData("vnp_OrderInfo", orderDesc);
             vnpay.AddRequestData("vnp_OrderType", "other");
             vnpay.AddRequestData("vnp_ReturnUrl", _configuration["Vnpay:vnp_ReturnUrl"]);
             vnpay.AddRequestData("vnp_CreateDate", timeNow.ToString("yyyyMMddHHmmss"));
             vnpay.AddRequestData("vnp_Locale", _configuration["Vnpay:vnp_Locale"]);
-            vnpay.AddRequestData("vnp_ExpireDate", DateTime.Now.AddMinutes(15).ToString("yyyyMMddHHmmss"));
+            vnpay.AddRequestData("vnp_ExpireDate", timeNow.AddMinutes(15).ToString("yyyyMMddHHmmss"));
 
             string paymentUrl = vnpay.CreateRequestUrl(_configuration["Vnpay:vnp_BaseUrl"], _configuration["Vnpay:vnp_HashSecret"]);
             _logger.LogInformation("Payment URL: {0}", paymentUrl);
@@ -114,19 +115,32 @@ namespace Application.Services
             }
             if (!int.TryParse(txnRef, out int membershipId))
             {
+                _logger.LogWarning("Could not parse membershipId from vnp_TxnRef = {txnRef}", txnRef);
                 return false;
             }
             var membership = await _unitOfWork.AccountMembershipRepo.GetByIdAsync(membershipId);
             if (membership == null) return false;
 
+            var plan = await _unitOfWork.MembershipPlanRepo.GetByIdAsync(membership.MembershipPlanId ?? 0);
+            if (plan == null)
+                return false;
+
             if (queryParams.TryGetValue("vnp_ResponseCode", out var resp) && resp == "00")
             {
+                var timeZoneById = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+                var timeNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZoneById);
+
                 membership.Status = "Active";
                 membership.PaymentStatus = "Paid";
+                membership.StartDate = DateOnly.FromDateTime(timeNow);
+                membership.EndDate = membership.StartDate.Value.AddDays(plan.Duration);
+
+                _logger.LogInformation("Payment success for membership #{MembershipId}, set Active.", membershipId);
             }
             else
             {
                 membership.PaymentStatus = "Failed";
+                _logger.LogInformation($"Payment failed for membership #{membershipId} - Code: {resp}");
             }
             await _unitOfWork.SaveChangesAsync();
 
