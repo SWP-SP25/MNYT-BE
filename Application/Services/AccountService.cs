@@ -68,7 +68,7 @@ namespace Application.Services
         {
             var existedAccount = await _unitOfWork.AccountRepo.GetByUsernameOrEmail(updateDto.Email, updateDto.UserName);
 
-            if (existedAccount != null)
+            if (existedAccount != null && existedAccount.Id != accountId)
             {
                 _logger.LogWarning("User already exists with the provided email or username.");
                 throw new Exceptions.ApplicationException(HttpStatusCode.BadRequest, "User already exists with the provided email or username.");
